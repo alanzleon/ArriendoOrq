@@ -68,6 +68,26 @@ public class ArriendoController {
         return response;
     }
 
+    @PostMapping()
+    public ResponseEntity<?> agregarArriendo(@RequestBody Arriendo arriendo) {
+        ResponseEntity<?> response;
+        String respuestaService = this.service.agregaArriendo(arriendo);
+        try {
+           switch(respuestaService){
+               case "agregado":
+                   response = new ResponseEntity<>(mensaje("Arriendo Agregado"),HttpStatus.OK);
+                   break;
+               default:
+                   response = new ResponseEntity<>(mensajeError("Algo Salio mal"),HttpStatus.INTERNAL_SERVER_ERROR);
+                   break;
+           }
+        } catch (Exception ex) {
+            response = new ResponseEntity<>(mensajeError(ex.toString()),HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        return response;
+    }
+
+
     public String mensajeError(String msjPersonalizado) {
         return "{\"Error\":\""+msjPersonalizado+"\"}";
     }
