@@ -77,10 +77,65 @@ public class ArriendoController {
                case "agregado":
                    response = new ResponseEntity<>(mensaje("Arriendo Agregado"),HttpStatus.OK);
                    break;
+               case "faltaFechaInicio":
+                   response = new ResponseEntity<>(mensajeError("Falta fecha de inicio de arriendo."),HttpStatus.BAD_REQUEST);
+                   break;
+               case "faltaTotalDias":
+                   response = new ResponseEntity<>(mensajeError("Debe especificar el total de dias."),HttpStatus.BAD_REQUEST);
+                   break;
+               case "faltaPatente":
+                   response = new ResponseEntity<>(mensajeError("Falta una patente"),HttpStatus.BAD_REQUEST);
+                   break;
+               case "patenteNoEncontrada":
+                   response = new ResponseEntity<>(mensajeError("Patente ingresa no existe"),HttpStatus.NOT_FOUND);
+                   break;
+               case "faltaRutCliente":
+                   response = new ResponseEntity<>(mensajeError("Falta rut del cliente"),HttpStatus.BAD_REQUEST);
+                   break;
+               case "clienteNoEncontrado":
+                   response = new ResponseEntity<>(mensajeError("Cliente ingresado no existe"),HttpStatus.NOT_FOUND);
+                   break;
+               case "faltaRutColaborador":
+                   response = new ResponseEntity<>(mensajeError("Falta rut del colaborador"),HttpStatus.BAD_REQUEST);
+                   break;
+               case "colaboradorNoEncontrado":
+                   response = new ResponseEntity<>(mensajeError("Colaborador ingresado no existe"),HttpStatus.NOT_FOUND);
+                   break;
                default:
-                   response = new ResponseEntity<>(mensajeError("Algo Salio mal"),HttpStatus.INTERNAL_SERVER_ERROR);
+                   response = new ResponseEntity<>(mensajeError("Defalut error x("),HttpStatus.INTERNAL_SERVER_ERROR);
                    break;
            }
+        } catch (Exception ex) {
+            response = new ResponseEntity<>(mensajeError(ex.toString()),HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        return response;
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<?> actualizar(@RequestBody Arriendo arriendo, @PathVariable(value = "id") String id){
+        ResponseEntity<?> response;
+        String respuestaService = this.service.actualizarArriendo(arriendo,id);
+        try {
+            switch (respuestaService) {
+                case "arriendoActualizado":
+                    response = new ResponseEntity<>(mensaje("Arriendo Actualizado"),HttpStatus.OK);
+                    break;
+                case "patenteNoEncontrada":
+                    response = new ResponseEntity<>(mensajeError("Patente No existe"),HttpStatus.NOT_FOUND);
+                    break;
+                case "clienteNoEncontrado":
+                    response = new ResponseEntity<>(mensaje("Cliente No existe"),HttpStatus.NOT_FOUND);
+                    break;
+                case "colaboradorNoEncontrado":
+                    response = new ResponseEntity<>(mensaje("Colaborador No existe"),HttpStatus.NOT_FOUND);
+                    break;
+                case "arriendoNoEncontrado":
+                    response = new ResponseEntity<>(mensaje("Arriendo No existe"),HttpStatus.NOT_FOUND);
+                    break;
+                default:
+                    response = new ResponseEntity<>(mensajeError("Defalut error x("),HttpStatus.INTERNAL_SERVER_ERROR);
+                    break;
+            }
         } catch (Exception ex) {
             response = new ResponseEntity<>(mensajeError(ex.toString()),HttpStatus.INTERNAL_SERVER_ERROR);
         }
