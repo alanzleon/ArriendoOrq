@@ -101,6 +101,9 @@ public class ArriendoController {
                case "colaboradorNoEncontrado":
                    response = new ResponseEntity<>(mensajeError("Colaborador ingresado no existe"),HttpStatus.NOT_FOUND);
                    break;
+               case "autoNoDisponible":
+                   response = new ResponseEntity<>(mensajeError("Automovil ingresado no disponible"),HttpStatus.BAD_REQUEST);
+                   break;
                default:
                    response = new ResponseEntity<>(mensajeError("Defalut error x("),HttpStatus.INTERNAL_SERVER_ERROR);
                    break;

@@ -22,7 +22,7 @@ public class ColaboradorClient implements ColaboradorClientService {
         HttpHeaders headers = new HttpHeaders();
         headers.setAccept(Arrays.asList((MediaType.APPLICATION_JSON)));
         HttpEntity<String> request = new HttpEntity<>(headers);
-        String url = "http://localhost:8092/colaborador/colaborador/"+rut;
+        String url = "http://localhost:8092/colaborador/"+rut;
 
         return this.restTemplate.exchange(
                 url,

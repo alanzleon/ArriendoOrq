@@ -35,29 +35,37 @@ public class ArriendoServiceImpl implements IArriendoService {
                     //Validar que exista patente
                     if(this.automovilClient.buscarAutomovilPorPatente(arriendo.getPatenteAutomovil())  != null){
                         Automovil automovil = this.automovilClient.buscarAutomovilPorPatente(arriendo.getPatenteAutomovil());
-                        if(arriendo.getRutCliente() != null && !arriendo.getRutCliente().isEmpty()) {
-                            //Validar que exista cliente
-                            if(this.clienteClient.obtenerClientePorRut(arriendo.getRutCliente()) != null){
-                                if(arriendo.getRutColaborador() != null && !arriendo.getRutColaborador().isEmpty()) {
-                                    //Validar que exista colaborador
-                                    if(this.colaboradorClient.obtenerColaboradorPorRut(arriendo.getRutColaborador()) != null){
-                                        //Calculo de fecha fin en base a total dias
-                                        arriendo.setFechaFin(arriendo.getFechaInicio().plusDays(arriendo.getTotalDias()));
-                                        //Calculo valor arriendo en base a total dias
-                                        arriendo.setValorArriendo((int) (automovil.getValorDiario()*arriendo.getTotalDias()));
-                                        this.repository.save(arriendo);
-                                        return "agregado";
+                        if(automovil.getEstadoArriendo().equals("Disponible")){
+                            if(arriendo.getRutCliente() != null && !arriendo.getRutCliente().isEmpty()) {
+                                //Validar que exista cliente
+                                if(this.clienteClient.obtenerClientePorRut(arriendo.getRutCliente()) != null){
+                                    if(arriendo.getRutColaborador() != null && !arriendo.getRutColaborador().isEmpty()) {
+                                        //Validar que exista colaborador
+                                        if(this.colaboradorClient.obtenerColaboradorPorRut(arriendo.getRutColaborador()) != null){
+                                            //Calculo de fecha fin en base a total dias
+                                            arriendo.setFechaFin(arriendo.getFechaInicio().plusDays(arriendo.getTotalDias()));
+                                            //Calculo valor arriendo en base a total dias
+                                            arriendo.setValorArriendo((int) (automovil.getValorDiario()*arriendo.getTotalDias()));
+                                            //-------------------------
+                                            this.repository.save(arriendo);
+                                            this.automovilClient.actualizarAutomovilPorPatente(automovil,arriendo.getPatenteAutomovil());
+                                            //----------------------------
+
+                                            return "agregado";
+                                        } else {
+                                            return "colaboradorNoEncontrado";
+                                        }
                                     } else {
-                                        return "colaboradorNoEncontrado";
+                                        return "faltaRutColaborador";
                                     }
                                 } else {
-                                    return "faltaRutColaborador";
+                                    return "clienteNoEncontrado";
                                 }
                             } else {
-                                return "clienteNoEncontrado";
+                                return "faltaRutCliente";
                             }
                         } else {
-                            return "faltaRutCliente";
+                            return "autoNoDisponible";
                         }
                     } else {
                         return "patenteNoEncontrada";
@@ -151,6 +159,7 @@ public class ArriendoServiceImpl implements IArriendoService {
                     arriendoDB.setValorArriendo((int) (auto.getValorDiario()*arriendo.getTotalDias()));
                 }
             }
+
             this.repository.save(arriendoDB);
             return "arriendoActualizado";
         } else {

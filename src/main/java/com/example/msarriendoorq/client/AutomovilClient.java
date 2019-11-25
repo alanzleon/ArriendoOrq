@@ -10,6 +10,9 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 
 @Component
@@ -36,15 +39,16 @@ public class AutomovilClient implements AutomovilClientService {
     }
 
     @Override
-    public void actualizarAutomovilPorPatente(Automovil auto, String patente) {
-        MultiValueMap<String, String> parts = new LinkedMultiValueMap<>();
-        parts.add("estadoArriendo",auto.getEstadoArriendo());
-
+    public void actualizarAutomovilPorPatente(Automovil auto,String patente) {
         HttpHeaders headers = new HttpHeaders();
-        headers.setAccept(Arrays.asList((MediaType.APPLICATION_JSON)));
-        HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(parts, headers);
-        String url = "http://localhost:8093/automovil/actualizar/"+patente;
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        Map<String, String> parts = new HashMap<>();
+        parts.put("patente",patente);
+        auto.setEstadoArriendo("Arrendado");
 
-        this.restTemplate.exchange(url,HttpMethod.PUT,request,String.class);
+        HttpEntity<Automovil> request = new HttpEntity<>(auto, headers);
+        String url = "http://localhost:8093/automovil/actualizar/{patente}";
+
+        this.restTemplate.exchange(url,HttpMethod.PUT,request,Void.class,parts);
     }
 }
