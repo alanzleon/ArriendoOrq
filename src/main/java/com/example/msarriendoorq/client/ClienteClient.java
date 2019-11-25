@@ -19,7 +19,7 @@ public class ClienteClient implements ClienteClientService{
         HttpHeaders headers = new HttpHeaders();
         headers.setAccept(Arrays.asList((MediaType.APPLICATION_JSON)));
         HttpEntity <String> request = new HttpEntity<>(headers);
-        String url = "http://localhost:8091/cliente/getByRut/"+rut;
+        String url = "http://localhost:8091/cliente/"+rut;
 
         return this.restTemplate.exchange(
                 url,

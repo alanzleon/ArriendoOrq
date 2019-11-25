@@ -26,7 +26,7 @@ public class AutomovilClient implements AutomovilClientService {
         HttpHeaders headers = new HttpHeaders();
         headers.setAccept(Arrays.asList((MediaType.APPLICATION_JSON)));
         HttpEntity<String> request = new HttpEntity<>(headers);
-        String url = "http://localhost:8093/automovil/getByPatente/"+patente;
+        String url = "http://localhost:8093/automovil/"+patente;
 
         ResponseEntity<String> response = this.restTemplate.exchange(
                 url,
@@ -47,7 +47,7 @@ public class AutomovilClient implements AutomovilClientService {
         auto.setEstadoArriendo("Arrendado");
 
         HttpEntity<Automovil> request = new HttpEntity<>(auto, headers);
-        String url = "http://localhost:8093/automovil/actualizar/{patente}";
+        String url = "http://localhost:8093/automovil/{patente}";
 
         this.restTemplate.exchange(url,HttpMethod.PUT,request,Void.class,parts);
     }
